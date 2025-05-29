@@ -57,14 +57,34 @@ def calculate_odds_for_specific_card(rank, suit):
     odds = 1 / total_cards
     return odds
 
+def blackjack_count(cards):
+    """
+    Returns the blackjack card count (Hi-Lo system) for a list of card values.
+    2-6: +1, 7-9: 0, 10/J/Q/K/A: -1
+    Args:
+        cards (list of int): List of card values (1-13, where 1 is Ace, 11-13 are J/Q/K)
+    Returns:
+        int: The running count
+    """
+    count = 0
+    for card in cards:
+        if 2 <= card <= 6:
+            count += 1
+        elif 7 <= card <= 9:
+            count += 0
+        elif card == 1 or 10 <= card <= 13:
+            count -= 1
+    return count
+
 def main_menu():
     """Main menu for user to choose actions."""
     while True:
         print("\nMain Menu:")
         print("1. Draw cards")
         print("2. Calculate odds for a specific card")
-        print("3. Exit")
-        choice = input("Choose an option (1-3): ").strip()
+        print("3. Blackjack card count (Hi-Lo)")
+        print("4. Exit")
+        choice = input("Choose an option (1-4): ").strip()
         if choice == '1':
             while True:
                 try:
@@ -112,10 +132,34 @@ def main_menu():
             except Exception:
                 print("Invalid input format. Please use the format 'Rank of Suit'.")
         elif choice == '3':
+            print("Enter card values separated by spaces (Ace=1, J=11, Q=12, K=13):")
+            user_input = input("Cards: ")
+            try:
+                card_strs = user_input.strip().split()
+                cards = []
+                for s in card_strs:
+                    s = s.capitalize()
+                    if s == 'A' or s == 'Ace':
+                        cards.append(1)
+                    elif s == 'J' or s == 'Jack':
+                        cards.append(11)
+                    elif s == 'Q' or s == 'Queen':
+                        cards.append(12)
+                    elif s == 'K' or s == 'King':
+                        cards.append(13)
+                    elif s.isdigit() and 2 <= int(s) <= 10:
+                        cards.append(int(s))
+                    else:
+                        raise ValueError(f"Invalid card: {s}")
+                count = blackjack_count(cards)
+                print(f"Blackjack Hi-Lo count: {count}")
+            except Exception as e:
+                print(f"Error: {e}\nPlease enter valid card values (e.g., 'A 2 3 10 J Q K').")
+        elif choice == '4':
             print("Goodbye!")
             break
         else:
-            print("Invalid choice. Please select 1, 2, or 3.")
+            print("Invalid choice. Please select 1, 2, 3, or 4.")
 
 if __name__ == "__main__":
     main_menu()
