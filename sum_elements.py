@@ -1,37 +1,28 @@
-#A poorly written example of a program in Python. It prompts the user for the number of elements to sum, takes those integers as input, and handles some basic error cases
+# A simple program to sum user-provided integers.
 
-MAX = 100
-
-def calculate_sum(arr):
-   result = 0
-   for num in arr:
-      result += num
-   return result
+def get_integer(prompt, min_value=1, max_value=100):
+    while True:
+        try:
+            value = int(input(prompt))
+            if min_value <= value <= max_value:
+                return value
+            else:
+                print(f"Please enter a number between {min_value} and {max_value}.")
+        except ValueError:
+            print("Invalid input. Please enter a valid integer.")
 
 def main():
-   try:
-      n = int(input("Enter the number of elements (1-100): "))
-      if not 1 <= n <= MAX:
-            print("Invalid input. Please provide a digit ranging from 1 to 100.")
-            exit(1)
-
-      arr = []
-
-      print(f"Enter {n} integers:")
-      for _ in range(n):
-            try:
-               arr.append(int(input()))
-            except ValueError:
-               print("Invalid input. Please enter valid integers.")
-               exit(1)
-
-      total = calculate_sum(arr)
-
-      print("Sum of the numbers:", total)
-
-   except KeyboardInterrupt:
-      print("\nProgram terminated by user.")
-      exit(1)
+    n = get_integer("How many numbers would you like to sum? (1-100): ")
+    numbers = []
+    print(f"Enter {n} integers:")
+    for i in range(n):
+        num = get_integer(f"  Number {i+1}: ", min_value=-1_000_000, max_value=1_000_000)
+        numbers.append(num)
+    total = sum(numbers)
+    print(f"Sum of the numbers: {total}")
 
 if __name__ == "__main__":
-   main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nProgram terminated by user.")
